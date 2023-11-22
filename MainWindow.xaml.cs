@@ -24,5 +24,34 @@ namespace WPF_XAML
         {
             InitializeComponent();
         }
+        static ushort state = 0;
+
+        bool Intercept() {
+            this.Close();   
+            return true;
+        }
+
+        private void select_Click(object sender, RoutedEventArgs e)
+        {
+            if (state == 0)
+            {
+                SHlabel.Content = "mouse 12 selected";
+                select.Content = "Click to deselect";
+                capture.Visibility = Visibility.Visible;
+                state = 1;
+            }
+            else if (state == 1)
+            {
+                SHlabel.Content = "Left-click 'Select' using mouse to be captured for SimHub";
+                select.Content = "Select current device";
+                capture.Visibility = Visibility.Hidden;  
+                state = 0;
+            }
+        }
+
+        private void capture_Click(object sender, RoutedEventArgs e)
+        {
+            Intercept();
+        }
     }
 }
