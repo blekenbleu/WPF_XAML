@@ -12,15 +12,15 @@ This is the **main** branch;&nbsp; **intercept** branch will integrate mouse int
 - *created new WPF App project in a subfolder, then moved its contents here*  
  ![](MainWindow.png)  
 
-- Dragged label, textbox and 2 buttons into MainWindow from ToolBox  
-	- named them and added content in `Properties`,  
-		adjusted sizes and positions in `MainWindow.xaml`  
+- Dragged WPF Controls (label, textbox and 2 button) from ToolBox into MainWindow  
+	- named Controls and added content in `Properties`,  
+		adjusted size and margin numbers in `MainWindow.xaml`  
 	- Build and Debug:  
 		![](SHmouse.png)
-	- unlike [WinForm](https://github.com/blekenbleu/WinForm), double-clicks did not generate C# code  
+	- unlike [WinForm](https://github.com/blekenbleu/WinForm), double-clickng dragged Controls did not generate C# code  
 		.. at least not at first, but did when tried later..?!!  
 - Launching the app shows prompt in label, current device event in text box
 	- left button armed to select mouse device
 		- pressing will unhide second button to capture that selected mouse and change this button to deselect
-	- right button, when visible,  will invoke Intercept() when clicked
-		Intercept() will eventually close the app
+	- right button, when visible,  will invoke Intercept() when clicked;  
+		Intercept() will eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
