@@ -24,8 +24,8 @@ This is the **intercept** branch for integrating mouse interception, currently b
 		- pressing will unhide second button to capture that selected mouse and change this button to deselect
 	- right button, when visible,  will invoke Intercept() when clicked;  
 		Intercept() will eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
-- Explicitly [handle <code>Closing</code> event](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/windows/?view=netdesktop-8.0#cancel-window-closure)
-	 e.g. to unhook interception
+- Explicitly [handle <code>OnClosed</code> event](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.form.onclosed?view=windowsdesktop-8.0)
+	 e.g. to unhook interception.  This event follows OnClosing when it is not cancelled.
 - Create <code>Intercept.cs</code> class mostly from
 	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Program.cs</code>.
 - Manually inserted into <code>WPF_XAML.csproj</code>:
@@ -36,5 +36,5 @@ This is the **intercept** branch for integrating mouse interception, currently b
 </pre>
 - static class InputInterceptor does not get its Initialize() invoked automagically (no New);  
  	Must invoke InputInterceptor.Initialize() to link DLL before invoking Intercept class;  
-    don't know why InterceptMouse does not also crash...  
+    don't know why [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) does not also crash...  
 - Intercept class causes mouse to go crazy..
