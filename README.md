@@ -26,3 +26,15 @@ This is the **main** branch;&nbsp; **intercept** branch will integrate mouse int
 		Intercept() will eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
 - Explicitly [handle <code>Closing</code> event](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/windows/?view=netdesktop-8.0#cancel-window-closure)
 	 e.g. to unhook interception
+- Create <code>Intercept.cs</code> class mostly from
+	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Program.cs</code>.
+- Manually inserted into <code>WPF_XAML.csproj</code>:
+<pre>
+	&lt;Reference Include="InputInterceptor-PersonalFork"&gt;
+		&lt;HintPath&gt;..\InputInterceptor-PersonalFork\InputInterceptor\bin\Debug\netstandard2.0\InputInterceptor-PersonalFork.dll&lt;/HintPath&gt;
+	&lt;/Reference&gt;
+</pre>
+- static class InputInterceptor does not get its Initialize() invoked automagically (no New);  
+ 	Must invoke InputInterceptor.Initialize() to link DLL before invoking Intercept class;  
+    don't know why InterceptMouse does not also crash...  
+- Intercept class causes mouse to go crazy..
