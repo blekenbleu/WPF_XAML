@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InputInterceptorNS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,16 +21,30 @@ namespace WPF_XAML
     /// </summary>
     public partial class MainWindow : Window
     {
+        Intercept Intermouse;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            if (InputInterceptor.Initialize())
+            {   // this seems to make the mouse crazy
+                Intermouse = new Intercept();
+                Intermouse.Initialize(this);
+            }
+            else WriteLabel("No interception");
         }
         static ushort state = 0;
 
-        bool Intercept()
+        bool Hook()
         {
             this.Close();
             return true;
+        }
+
+        public void WriteLabel(string text)
+        {
+            SHlabel.Content = text;
         }
 
         private void Select_Click(object sender, RoutedEventArgs e)
@@ -53,7 +68,7 @@ namespace WPF_XAML
         private void Capture_Click(object sender, RoutedEventArgs e)
         {
             capture.Visibility = Visibility.Hidden;
-            Intercept();
+            Hook();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -66,6 +81,13 @@ namespace WPF_XAML
             // User doesn't want to close, cancel closure
             if (result == MessageBoxResult.No)
                 e.Cancel = true;
+        }
+
+        protected override void OnClosed(EventArgs e)   // called when e.Cancel != true;
+        {
+            if (null != Intermouse)
+                Intermouse.DisposeIntercept();      	// mouseHook clean up
+            base.OnClosed(e);
         }
     }
 }
