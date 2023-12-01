@@ -1,7 +1,7 @@
 # WPF_XAML
  Learning exercise for [SimHub mouse interception plugin UI](https://blekenbleu.github.io/static/SimHub/VisualStudio.htm#XAML)  
 
-This is the **main** branch;&nbsp; **intercept** branch will integrate mouse interception.
+This is the **intercept** branch for integrating mouse interception, currently buggy.
 
 - *Created using GitHub Desktop* `File>New Repository..`  
  ![](NewRepo.png)  
