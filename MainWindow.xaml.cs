@@ -26,32 +26,46 @@ namespace WPF_XAML
         }
         static ushort state = 0;
 
-        bool Intercept() {
-            this.Close();   
+        bool Intercept()
+        {
+            this.Close();
             return true;
         }
 
-        private void select_Click(object sender, RoutedEventArgs e)
+        private void Select_Click(object sender, RoutedEventArgs e)
         {
-            if (state == 0)
+            if (1 != state)
             {
                 SHlabel.Content = "mouse 12 selected";
                 select.Content = "Click to deselect";
                 capture.Visibility = Visibility.Visible;
                 state = 1;
             }
-            else if (state == 1)
+            else
             {
                 SHlabel.Content = "Left-click 'Select' using mouse to be captured for SimHub";
                 select.Content = "Select current device";
-                capture.Visibility = Visibility.Hidden;  
+                capture.Visibility = Visibility.Hidden;
                 state = 0;
             }
         }
 
-        private void capture_Click(object sender, RoutedEventArgs e)
+        private void Capture_Click(object sender, RoutedEventArgs e)
         {
+            capture.Visibility = Visibility.Hidden;
             Intercept();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Handle interception unhooking
+            var result = MessageBox.Show("state: " + state + ((0 < state) ? "; Unhook mouse?" : "; Done?"),
+                                         "Closing",              // messageBox caption
+                                         MessageBoxButton.YesNo);
+
+            // User doesn't want to close, cancel closure
+            if (result == MessageBoxResult.No)
+                e.Cancel = true;
         }
     }
 }
