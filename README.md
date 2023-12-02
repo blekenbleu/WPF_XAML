@@ -37,7 +37,7 @@ This is the **intercept** branch for integrating mouse interception, currently b
 - static class InputInterceptor does not get its Initialize() invoked automagically (no New);  
  	Must invoke InputInterceptor.Initialize() to link DLL before invoking Intercept class;  
     don't know why [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) does not also crash...  
-- Intercept class causes mouse to go crazy..
+- Intercept class drastically slows mouse responses, nearly uncontrollable.
 - Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):<br>
 	&lt;DisableWinExeOutputInference>true</DisableWinExeOutputInference&gt;<br>
 	&lt;OutputType&gt;Console Application&lt;/OutputType&gt; instead of &lt;OutputType&gt;WinExe&lt;/OutputType&gt; 

@@ -40,11 +40,10 @@ namespace WPF_XAML
 		static void WriteLabel(string label) { main.WriteLabel(label);  }
 
 
-		public void DisposeIntercept()
+		public void End()
 		{
 			//  keyboardHook.Dispose();
-			if (once)
-				Mousehook.Dispose();
+			Mousehook?.Dispose();
 		}
 
 		// https://learn.microsoft.com/en-us/dotnet/framework/interop/how-to-implement-callback-functions
