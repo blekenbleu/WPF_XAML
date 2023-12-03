@@ -13,18 +13,16 @@ namespace WPF_XAML
 	/// </summary>
 	public class Intercept
 	{
-		static List<DeviceData> devices;
-		static bool once = false;
+		static List<DeviceData>? devices;
+		MouseHook Mousehook { get; } = new(MouseCallback);
+	//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
 		public delegate void WriteStatus(string s);
-        static WriteStatus Writestring = Console.WriteLine;
+		static WriteStatus Writestring = Console.WriteLine;
 		public int Count => (null != devices) ? devices.Count : 0;
 
 		public Intercept()
 		{
-        }
-
-		MouseHook Mousehook { get; } = new(MouseCallback);
-	//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
+		}
 
 		public bool Initialize(Intercept.WriteStatus writeString)
 		{
@@ -32,14 +30,9 @@ namespace WPF_XAML
 
 			if (InputInterceptor.Initialized)
 			{
-				if (InitializeDriver())
-				{
-					once = true;
-
-					Writestring("Mouse Hook enabled.");
-//					MessageBox.Show("Input interceptor successfully initialized.", "Intercept");
-				}
-				else return InstallDriver();
+				if (!InputInterceptor.CheckDriverInstalled())
+					return InstallDriver();
+				else Writestring("Intercept Driver Initialized");
 			}
 			else
 			{
@@ -47,11 +40,11 @@ namespace WPF_XAML
 				return false;
 			}
 			return true;
-        }
+		}
 
 		public void End()
 		{
-			//  keyboardHook.Dispose();
+		//	keyboardHook?.Dispose();
 			Mousehook?.Dispose();
 		}
 
@@ -60,10 +53,9 @@ namespace WPF_XAML
 		{
 			try
 			{
-				if (true == once) {
-					once = false;
+				if (null == devices)
 					devices = InputInterceptor.GetDeviceList(context, InputInterceptor.IsMouse);
-				}
+
 				string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
 				// Mouse XY coordinates are raw changes
 				Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
@@ -91,24 +83,14 @@ namespace WPF_XAML
 			{
 				Console.WriteLine($"KeyStroke: {exception}");
 			}
-			// Button swap
-			//keyStroke.Code = keyStroke.Code switch {
-			//  KeyCode.A => KeyCode.B,
-			//  KeyCode.B => KeyCode.A,
-			//  _ => keyStroke.Code,
-			//};
+		/*	Button swap
+			keyStroke.Code = keyStroke.Code switch {
+				KeyCode.A => KeyCode.B,
+				KeyCode.B => KeyCode.A,
+				_ => keyStroke.Code,
+			};
+		 */
 			return true;
-		}
-
-		static bool InitializeDriver()
-		{
-			if (InputInterceptor.CheckDriverInstalled())
-			{
-				Writestring("Input intercept driver seems to be installed.");
-				return true;
-			}
-			Writestring("Input intercept driver not found.");
-			return false;
 		}
 
 		static bool InstallDriver()
@@ -118,18 +100,10 @@ namespace WPF_XAML
 			{
 				Writestring("Installing...");
 				if (InputInterceptor.InstallDriver())
-				{
 					Writestring("Input interception driver installed! Restart your computer.");
-				}
-				else
-				{
-					Writestring("Something... gone... wrong... :(");
-				}
+				else Writestring("Something... gone... wrong... :(");
 			}
-			else
-			{
-				Writestring("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
-			}
+			else Writestring("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
 			return false;
 		}
 	}

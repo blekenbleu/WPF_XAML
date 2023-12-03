@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InputInterceptorNS;
+using System;
 using System.Windows;
 using System.ComponentModel;
 
@@ -18,18 +19,18 @@ namespace WPF_XAML
 		{
 			get
 			{
-        		return _statusText;
-    		}
+				return _statusText;
+			}
 
-    		set
-    		{
-        		if (value == _statusText)
-            		return;
+			set
+			{
+				if (value == _statusText)
+					return;
 
-        		_statusText = value;
+				_statusText = value;
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusText"));
-            }
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusText"));
+			}
 		}
 	}
 
@@ -38,22 +39,44 @@ namespace WPF_XAML
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		static ushort state = 0;
 		Intercept Intermouse;
 
 		// need to reference XAML control from a static method
 		private static MainViewModel _mainViewModel = new();
 
-        public MainWindow()
+		public MainWindow()
 		{
 			this.DataContext = _mainViewModel;	// hijack DataContext
 
 			InitializeComponent();
 
-            Intermouse = new Intercept();
-			if (!Intermouse.Initialize(WriteStatus))
-				WriteStatus("No interception");
+			try
+			{
+				// InputInterceptor.Initialize() absolutely must be run before new Intercept()!!
+				if (!InputInterceptor.Initialize())  // fails if DLL not linked
+				{
+					MessageBox.Show("Invalid or missing DLL;  closing", "InputInterceptor.Initialize()");
+					state = 99;
+					Close();
+				}
+
+				Intermouse = new Intercept();
+
+				if (!Intermouse.Initialize(WriteStatus))
+				{
+					MessageBox.Show("No interception", "Intermouse.Initialize()");
+					state = 99;
+					Close();
+				}
+
+			} catch(Exception exception) {
+				MessageBox.Show("probably bad: '" 
+				+ InputInterceptor.DPath + "'\n" + exception,
+				"InputInterceptor.Initialize() Exception"); 
+				Close();
+			}
 		}
-		static ushort state = 0;
 
 		bool Hooked()		// what to do when a mouse is hooked
 		{
@@ -93,13 +116,16 @@ namespace WPF_XAML
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			// Handle interception unhooking
-			var result = MessageBox.Show("state: " + state + ((0 < state) ? "; Unhook mouse?" : "; Done?"),
-										 "Closing",				  // messageBox caption
-										 MessageBoxButton.YesNo);
+			if (99 != state)
+			{
+				// Handle interception unhooking
+				var result = MessageBox.Show("state: " + state + ((0 < state) ? "; Unhook mouse?" : "; Done?"),
+											 "Closing",			   // messageBox caption
+											 MessageBoxButton.YesNo);
 
-			// User doesn't want to close, cancel closure
-			e.Cancel = (result == MessageBoxResult.No);
+				// User doesn't want to close, cancel closure
+				e.Cancel = (result == MessageBoxResult.No);
+			}
 		}
 
 		protected override void OnClosed(EventArgs e)   // called when e.Cancel != true;
