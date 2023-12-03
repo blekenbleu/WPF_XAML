@@ -40,5 +40,6 @@ This is the **intercept** branch for integrating mouse interception, currently b
 - Intercept class drastically slows mouse responses, nearly uncontrollable.
 - Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):<br>
 	&lt;DisableWinExeOutputInference>true</DisableWinExeOutputInference&gt;<br>
-	&lt;OutputType&gt;Console Application&lt;/OutputType&gt; instead of &lt;OutputType&gt;WinExe&lt;/OutputType&gt; 
+	&lt;OutputType&gt;Console Application&lt;/OutputType&gt; instead of &lt;OutputType&gt;WinExe&lt;/OutputType&gt;
+- Found [a solution for updating TextBox Text from a static method](https://stackoverflow.com/questions/13121155/)
 	

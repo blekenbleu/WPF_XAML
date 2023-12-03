@@ -1,33 +1,53 @@
-﻿using InputInterceptorNS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace WPF_XAML
 {
+	/// <summary>
+	/// https://stackoverflow.com/questions/13121155
+	/// a view model class with string property StatusText
+	/// </summary>
+	public class MainViewModel : INotifyPropertyChanged
+	{ 
+		private string _statusText;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public string StatusText
+		{
+			get
+			{
+        		return _statusText;
+    		}
+
+    		set
+    		{
+        		if (value == _statusText)
+            		return;
+
+        		_statusText = value;
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusText"));
+            }
+		}
+	}
+
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window
 	{
 		Intercept Intermouse;
-		public static MainWindow screenMain;
+
+		// need to reference XAML control from a static method
+		private static MainViewModel _mainViewModel = new();
 
         public MainWindow()
 		{
+			this.DataContext = _mainViewModel;	// hijack DataContext
+
 			InitializeComponent();
-			screenMain = this;
 
             Intermouse = new Intercept();
 			if (!Intermouse.Initialize(WriteStatus))
@@ -41,9 +61,10 @@ namespace WPF_XAML
 			return true;
 		}
 
+		// https://stackoverflow.com/questions/13121155
 		public static void WriteStatus(string text)
 		{
-			screenMain.Status.Text = text;
+			_mainViewModel.StatusText = text;		// _mainViewModel is static
 		}
 
 		private void Select_Click(object sender, RoutedEventArgs e)
