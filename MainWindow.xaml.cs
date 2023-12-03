@@ -22,17 +22,16 @@ namespace WPF_XAML
 	public partial class MainWindow : Window
 	{
 		Intercept Intermouse;
+		public static MainWindow screenMain;
 
-		public MainWindow()
+        public MainWindow()
 		{
 			InitializeComponent();
+			screenMain = this;
 
-			if (InputInterceptor.Initialize())
-			{   // this seems to make the mouse crazy
-				Intermouse = new Intercept();
-				Intermouse.Initialize(this);
-			}
-			else WriteLabel("No interception");
+            Intermouse = new Intercept();
+			if (!Intermouse.Initialize(WriteStatus))
+				WriteStatus("No interception");
 		}
 		static ushort state = 0;
 
@@ -42,9 +41,9 @@ namespace WPF_XAML
 			return true;
 		}
 
-		public void WriteLabel(string text)
+		public static void WriteStatus(string text)
 		{
-			SHlabel.Content = text;
+			screenMain.Status.Text = text;
 		}
 
 		private void Select_Click(object sender, RoutedEventArgs e)

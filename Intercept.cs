@@ -15,30 +15,39 @@ namespace WPF_XAML
 	{
 		static List<DeviceData> devices;
 		static bool once = false;
-		static MainWindow main;
+		public delegate void WriteStatus(string s);
+        static WriteStatus Writestring = Console.WriteLine;
+		public int Count => (null != devices) ? devices.Count : 0;
+
+		public Intercept()
+		{
+        }
 
 		MouseHook Mousehook { get; } = new(MouseCallback);
+	//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
 
-		public void Initialize(MainWindow passed)
+		public bool Initialize(Intercept.WriteStatus writeString)
 		{
-			main = passed;
-			devices = null;
+			Writestring = writeString;
 
-			if (true) // InitializeDriver())
+			if (InputInterceptor.Initialized)
 			{
-				once = true;
+				if (InitializeDriver())
+				{
+					once = true;
 
-				//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
-				WriteLabel("Mouse Hook enabled.  Left-click 'Select' using mouse to be captured for SimHub");
+					Writestring("Mouse Hook enabled.");
+//					MessageBox.Show("Input interceptor successfully initialized.", "Intercept");
+				}
+				else return InstallDriver();
 			}
 			else
 			{
-				InstallDriver();
+				MessageBox.Show("Input interceptor not initialized;  valid dll probably not found", "Intercept");
+				return false;
 			}
-		}
-
-		static void WriteLabel(string label) { main.WriteLabel(label);  }
-
+			return true;
+        }
 
 		public void End()
 		{
@@ -57,11 +66,11 @@ namespace WPF_XAML
 				}
 				string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
 				// Mouse XY coordinates are raw changes
-				Report($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
+				Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
 			}
 			catch (Exception exception)
 			{
-				WriteLabel($"MouseStroke: {exception}");
+				Console.WriteLine($"MouseStroke: {exception}");
 			}
 
 			//  m.X = -m.X;	 // Invert mouse X
@@ -72,17 +81,15 @@ namespace WPF_XAML
 		// decode scrolling
 		private static short XY(ref MouseStroke m, short s) { return (short)((((UInt16)m.State >> s) & 1) * ((m.Rolling < 0) ? -1 : 1)); }
 
-		private static void Report (string message) { WriteLabel(message); }
-
 		private static bool KeyboardCallback(Context context, Device device, ref KeyStroke keyStroke)
 		{
 			try
 			{
-				WriteLabel($"Device: {device}; Keystroke: {keyStroke.Code} {keyStroke.State} {keyStroke.Information}");
+				Writestring($"Device: {device}; Keystroke: {keyStroke.Code} {keyStroke.State} {keyStroke.Information}");
 			}
 			catch (Exception exception)
 			{
-				WriteLabel($"KeyStroke: {exception}");
+				Console.WriteLine($"KeyStroke: {exception}");
 			}
 			// Button swap
 			//keyStroke.Code = keyStroke.Code switch {
@@ -97,36 +104,33 @@ namespace WPF_XAML
 		{
 			if (InputInterceptor.CheckDriverInstalled())
 			{
-				WriteLabel("Input interceptor seems to be installed.");
-				if (InputInterceptor.Initialize())
-				{
-					WriteLabel("Input interceptor successfully initialized.");
-					return true;
-				}
+				Writestring("Input intercept driver seems to be installed.");
+				return true;
 			}
-			WriteLabel("Input interceptor initialization failed.");
+			Writestring("Input intercept driver not found.");
 			return false;
 		}
 
-		static void InstallDriver()
+		static bool InstallDriver()
 		{
-			WriteLabel("Input interception driver not installed.");
+			Writestring("Input interception driver not installed.");
 			if (InputInterceptor.CheckAdministratorRights())
 			{
-				WriteLabel("Installing...");
+				Writestring("Installing...");
 				if (InputInterceptor.InstallDriver())
 				{
-					WriteLabel("Input interception driver installed! Restart your computer.");
+					Writestring("Input interception driver installed! Restart your computer.");
 				}
 				else
 				{
-					WriteLabel("Something... gone... wrong... :(");
+					Writestring("Something... gone... wrong... :(");
 				}
 			}
 			else
 			{
-				WriteLabel("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
+				Writestring("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
 			}
+			return false;
 		}
 	}
 }
