@@ -25,6 +25,28 @@ This is the **intercept** branch for integrating mouse interception.
 		- left button gets changed to `deselect`  
 		- pressing right button, when visible, changes mouse callback to filter  
 		- Intercept() may eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
+
+## [Interception driver](https://github.com/oblitum/Interception/releases/latest) installation
+Keyboard / mouse stroke interception depends on a [**custom signed driver**](https://github.com/oblitum/Interception/releases/latest).
+- With *good* luck, [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) automatically installs it.
+- Otherwise, reboot the PC and run a Windows Command prompt *as administrator*:
+    **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /install`
+```
+    Interception command line installation tool
+    Copyright (C) 2008-2018 Francisco Lopes da Silva
+
+    Interception successfully installed. You must reboot for it to take effect.
+```
+- then **reboot the PC** before proceeding
+
+#### to uninstall the driver
+- I needed to do this for error handling code testing...
+    **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /uninstall`
+    - then reboot
+
+--- 
+
+
 - Explicitly [handle <code>OnClosed</code> event](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.form.onclosed?view=windowsdesktop-8.0)
 	 e.g. to unhook interception.  
 	This Closed event follows OnClosing when it is not cancelled.
@@ -44,8 +66,8 @@ This is the **intercept** branch for integrating mouse interception.
 - Found [a solution for updating XAML TextBox Text from a static method](https://stackoverflow.com/questions/13121155/)
 
 - to do:  
-		- access `short[5] Stroke` from callback to implement device selection &nbsp; *done 4 Dec*  
 		- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
+		- access `short[5] Stroke` from callback for mouse selection &nbsp; *done 4 Dec*  
 		- filter only selected mouse  
 		- implement `short[5]` cumulative displacement instead of increments  
 
