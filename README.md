@@ -40,7 +40,7 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 - then **reboot the PC** before proceeding
 
 #### to uninstall the driver
-- I needed to do this for error handling code testing...
+- I needed to do this for error handling code testing...  
     **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /uninstall`
     - then reboot
 
