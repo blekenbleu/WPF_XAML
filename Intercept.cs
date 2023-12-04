@@ -6,6 +6,8 @@ using System.Windows;
 using Context = System.IntPtr;
 using Device = System.Int32;
 
+#nullable enable
+
 namespace WPF_XAML
 {
 	/// <summary>
@@ -13,12 +15,14 @@ namespace WPF_XAML
 	/// </summary>
 	public class Intercept
 	{
-		static List<DeviceData>? devices;
+		public static List<DeviceData>? devices;
 		MouseHook Mousehook { get; } = new(MouseCallback);
 	//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
 		public delegate void WriteStatus(string s);
 		static WriteStatus Writestring = Console.WriteLine;
 		public int Count => (null != devices) ? devices.Count : 0;
+		public static short[] Stroke = [0,0,0,0,0];
+		public static short Selected = 0;
 
 		public Intercept()
 		{
@@ -36,7 +40,7 @@ namespace WPF_XAML
 			}
 			else
 			{
-				MessageBox.Show("Input interceptor not initialized;  valid dll probably not found", "Intercept");
+				MessageBox.Show("Input.Interceptor not initialized;  valid dll probably not found", "Intercept");
 				return false;
 			}
 			return true;
@@ -56,6 +60,7 @@ namespace WPF_XAML
 				if (null == devices)
 					devices = InputInterceptor.GetDeviceList(context, InputInterceptor.IsMouse);
 
+				Stroke[0] = (short)device;
 				string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
 				// Mouse XY coordinates are raw changes
 				Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
@@ -71,7 +76,9 @@ namespace WPF_XAML
 		}
 
 		// decode scrolling
-		private static short XY(ref MouseStroke m, short s) { return (short)((((UInt16)m.State >> s) & 1) * ((m.Rolling < 0) ? -1 : 1)); }
+		private static short XY(ref MouseStroke m, short s) {
+			return (short)((((UInt16)m.State >> s) & 1) * ((m.Rolling < 0) ? -1 : 1));
+		}
 
 		private static bool KeyboardCallback(Context context, Device device, ref KeyStroke keyStroke)
 		{
@@ -105,6 +112,15 @@ namespace WPF_XAML
 			}
 			else Writestring("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
 			return false;
+		}
+
+		public bool Devices()
+		{
+			for (int dd = 0; dd < devices?.Count; dd++)
+			{
+                MessageBox.Show($"device: {devices[dd].Device}: " + devices[dd].Names[0], "Intercept.Devices");
+			}
+			return true;
 		}
 	}
 }

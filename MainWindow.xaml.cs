@@ -78,12 +78,6 @@ namespace WPF_XAML
 			}
 		}
 
-		bool Hooked()		// what to do when a mouse is hooked
-		{
-			this.Close();
-			return true;
-		}
-
 		// https://stackoverflow.com/questions/13121155
 		public static void WriteStatus(string text)
 		{
@@ -92,20 +86,41 @@ namespace WPF_XAML
 
 		private void Select_Click(object sender, RoutedEventArgs e)
 		{
-			if (1 != state)
+			if (99 == state)
+				Hooked();
+
+			if (2 > Intercept.devices.Count)
 			{
-				SHlabel.Content = "mouse 12 selected";
-				select.Content = "Click to deselect";
+				SHlabel.Content = "Only one mouse;  none available to capture";
+				select.Content = "OK";
+				state = 99;
+			}
+			else if (1 != state)
+			{
+				SHlabel.Content = $"mouse {Intercept.Stroke[0]} selected";
+				Intercept.Selected = Intercept.Stroke[0];
+
+                select.Content = "Click to deselect";
 				capture.Visibility = Visibility.Visible;
 				state = 1;
 			}
 			else
 			{
-				SHlabel.Content = "Left-click 'Select' using mouse to be captured for SimHub";
-				select.Content = "Select current device";
+				Intercept.Selected = 0;
 				capture.Visibility = Visibility.Hidden;
-				state = 0;
+				if (1 < Intercept.devices.Count) {
+                	SHlabel.Content = "Left-click 'Select' using mouse to be captured for SimHub";
+					select.Content = "Select current device";
+					state = 0;
+				}
 			}
+		}
+
+		bool Hooked()		// what to do when a mouse is hooked; e.g. change callback
+		{
+			Intermouse?.Devices();	// iterate thru intercepted devices
+			this.Close();
+			return true;
 		}
 
 		private void Capture_Click(object sender, RoutedEventArgs e)
@@ -119,7 +134,8 @@ namespace WPF_XAML
 			if (99 != state)
 			{
 				// Handle interception unhooking
-				var result = MessageBox.Show("state: " + state + ((0 < state) ? "; Unhook mouse?" : "; Done?"),
+				var result = MessageBox.Show("state: " + state
+						   + ((0 < state) ? $"; Unhook mouse {Intercept.Selected}?" : "; Done?"),
 											 "Closing",			   // messageBox caption
 											 MessageBoxButton.YesNo);
 
