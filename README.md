@@ -30,8 +30,8 @@ This is the **intercept** branch for integrating mouse interception, currently b
 	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Program.cs</code>.
 - Manually inserted into <code>WPF_XAML.csproj</code>:
 <pre>
-	&lt;Reference Include="InputInterceptor-PersonalFork"&gt;
-		&lt;HintPath&gt;..\InputInterceptor-PersonalFork\InputInterceptor\bin\Debug\netstandard2.0\InputInterceptor-PersonalFork.dll&lt;/HintPath&gt;
+	&lt;Reference Include="InputIntercept"&gt;
+		&lt;HintPath&gt;..\InputIntercept\InputInterceptor\bin\Debug\netstandard2.0\InputIntercept.dll&lt;/HintPath&gt;
 	&lt;/Reference&gt;
 </pre>
 - static class `InputInterceptor` does not get its `Initialize()` invoked automagically (no `New`);  
