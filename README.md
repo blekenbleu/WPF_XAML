@@ -17,17 +17,19 @@ This is the **intercept** branch for integrating mouse interception.
 		adjusted size and margin numbers in `MainWindow.xaml`  
 	- Build and Debug:  
 		![](SHmouse.png)
-	- unlike [WinForm](https://github.com/blekenbleu/WinForm), double-clickng dragged Controls did not generate C# code  
+	- unlike [WinForm](https://github.com/blekenbleu/WinForm), double-clicking dragged Controls did not generate C# code  
 		.. at least not at first, but did when tried later..?!!  
-- Launching the app shows prompt in label, current device event in textbox
-	- left button armed to select mouse device
-		- pressing will unhide second button to capture that selected mouse and change this button to deselect
-	- right button, when visible,  will invoke Intercept() when clicked;  
-		Intercept() will eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
+- Launching the app shows prompt in label, current device event in textbox  
+		- left button armed to select mouse device  
+		- pressing left button reveals *second button* to `capture selected mouse`  
+		- left button gets changed to `deselect`  
+		- pressing right button, when visible, changes mouse callback to filter  
+		- Intercept() may eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
 - Explicitly [handle <code>OnClosed</code> event](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.form.onclosed?view=windowsdesktop-8.0)
-	 e.g. to unhook interception.  This event follows OnClosing when it is not cancelled.
+	 e.g. to unhook interception.  
+	This Closed event follows OnClosing when it is not cancelled.
 - Create <code>Intercept.cs</code> class mostly from
-	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Program.cs</code>.
+	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Intercept.cs</code>.
 - Manually inserted into <code>WPF_XAML.csproj</code>:
 <pre>
 	&lt;Reference Include="InputIntercept"&gt;
