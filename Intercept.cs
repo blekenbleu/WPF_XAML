@@ -46,6 +46,16 @@ namespace WPF_XAML
 			return true;
 		}
 
+		public void AllMice()
+		{
+			MouseHook Mousehook = new(MouseCallback);
+		}
+
+		public void MyMouse()
+		{
+			MouseHook Mousehook = new(SelectCallback);
+		}
+
 		public void End()
 		{
 		//	keyboardHook?.Dispose();
@@ -73,6 +83,32 @@ namespace WPF_XAML
 			//  m.X = -m.X;	 // Invert mouse X
 			//  m.Y = -m.Y;	 // Invert mouse Y
 			return true;
+		}
+
+		private static bool SelectCallback(Context context, Device device, ref MouseStroke m)
+		{
+			if (Selected != device)
+				return true;
+
+			try
+			{
+				// Mouse XY coordinates are raw changes
+				if (0 != (0xC00 & (ushort)m.State))
+				{
+					Stroke[3] += XY(ref m, 11);
+					Stroke[4] += XY(ref m, 10);
+				}
+				Stroke[1] += (short)m.X;
+				Stroke[2] += (short)m.Y;
+
+				Writestring($"Selected Mouse {Selected}: X:{Stroke[1]}, Y:{Stroke[2]}; Scroll: x:{Stroke[3]}, y:{Stroke[4]}" );
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine($"MouseStroke: {exception}");
+			}
+
+			return false;	// do not pass Selected mouse strokes
 		}
 
 		// decode scrolling
