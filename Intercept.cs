@@ -40,7 +40,8 @@ namespace WPF_XAML
 			}
 			else
 			{
-				MessageBox.Show("Input.Interceptor not initialized;  valid dll probably not found", "Intercept");
+				MessageBox.Show(Application.Current.MainWindow,
+								 "Input.Interceptor not initialized;  valid dll probably not found", "Intercept");
 				return false;
 			}
 			return true;
@@ -53,19 +54,22 @@ namespace WPF_XAML
 		}
 
 		// https://learn.microsoft.com/en-us/dotnet/framework/interop/how-to-implement-callback-functions
-		private static bool MouseCallback(Context context, Device device, ref MouseStroke m)
+		private static bool MouseCallback(Context context, Device device, ref MouseStroke ms)
 		{
 			try
 			{
 				if (null == devices)
 					devices = InputInterceptor.GetDeviceList(context, InputInterceptor.IsMouse);
 
-				if (0 == Selected || device != Selected)
+				if (device != Selected)
 				{
-					Stroke[0] = (short)device;
-					string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
-					// Mouse XY coordinates are raw changes
-					Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
+					if (0 == Selected)
+					{
+						Stroke[0] = (short)device;
+						string scroll = (0 == (0xC00 & (ushort)ms.State)) ? "" : $" x:{XY(ref ms, 11)}, y:{XY(ref ms, 10)}";
+						// Mouse XY coordinates are raw changes
+						Writestring($"Device: {device}; MouseStroke: X:{ms.X}, Y:{ms.Y}; S: {ms.State}" + scroll);
+					}
 					return true;
 				}
 			}
@@ -79,13 +83,13 @@ namespace WPF_XAML
 			try
 			{
 				// Mouse XY coordinates are raw changes
-				if (0 != (0xC00 & (ushort)m.State))
+				if (0 != (0xC00 & (ushort)ms.State))
 				{
-					Stroke[3] += XY(ref m, 11);
-					Stroke[4] += XY(ref m, 10);
+					Stroke[3] += XY(ref ms, 11);
+					Stroke[4] += XY(ref ms, 10);
 				}
-				Stroke[1] += (short)m.X;
-				Stroke[2] += (short)m.Y;
+				Stroke[1] += (short)ms.X;
+				Stroke[2] += (short)ms.Y;
 
 				Writestring($"Selected Mouse {Selected}: X:{Stroke[1]}, Y:{Stroke[2]}; Scroll: x:{Stroke[3]}, y:{Stroke[4]}" );
 			}
@@ -98,8 +102,8 @@ namespace WPF_XAML
 		}
 
 		// decode scrolling
-		private static short XY(ref MouseStroke m, short s) {
-			return (short)((((UInt16)m.State >> s) & 1) * ((m.Rolling < 0) ? -1 : 1));
+		private static short XY(ref MouseStroke ms, short s) {
+			return (short)((((UInt16)ms.State >> s) & 1) * ((ms.Rolling < 0) ? -1 : 1));
 		}
 
 		private static bool KeyboardCallback(Context context, Device device, ref KeyStroke keyStroke)
@@ -136,11 +140,13 @@ namespace WPF_XAML
 			return false;
 		}
 
-		public bool Devices()
+		public bool Devices(short stick)
 		{
 			for (int dd = 0; dd < devices?.Count; dd++)
 			{
-                MessageBox.Show($"device: {devices[dd].Device}: " + devices[dd].Names[0], "Intercept.Devices");
+				if (0 == stick || stick == devices[dd].Device)
+					MessageBox.Show(Application.Current.MainWindow,		// should display on top, regardless of focus
+									$"device: {devices[dd].Device}: " + devices[dd].Names[0], "Intercept.Devices");
 			}
 			return true;
 		}
