@@ -3,6 +3,8 @@
 
 This is the **intercept** branch for integrating mouse interception.
 
+<details><summary><code>main</code> branch content</summary>
+
 - *Created using GitHub Desktop* `File>New Repository..`  
  ![](NewRepo.png)  
 - Then:&nbsp; Visual Studio 2022 Community `File>New`  
@@ -26,7 +28,10 @@ This is the **intercept** branch for integrating mouse interception.
 		- pressing right button, when visible, changes mouse callback to filter  
 		- Intercept() may eventually [close the app](https://stackoverflow.com/questions/2820357/how-do-i-exit-a-wpf-application-programmatically).
 
-## [Interception driver](https://github.com/oblitum/Interception/releases/latest) installation
+</details>
+
+<details><summary><a href=https://github.com/oblitum/Interception/releases/latest><b>Interception driver</b> installation</summary>
+
 Keyboard / mouse stroke interception depends on a [**custom signed driver**](https://github.com/oblitum/Interception/releases/latest).
 - With *good* luck, [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) automatically installs it.
 - Otherwise, reboot the PC and run a Windows Command prompt *as administrator*:
@@ -44,8 +49,9 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
     **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /uninstall`
     - then reboot
 
---- 
+</details>
 
+### mouse interception in WPF XAML
 
 - Explicitly [handle <code>OnClosed</code> event](https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.form.onclosed?view=windowsdesktop-8.0)
 	 e.g. to unhook interception.  
@@ -53,11 +59,11 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 - Create <code>Intercept.cs</code> class mostly from
 	<a href="https://github.com/blekenbleu/InterceptMouse">InterceptMouse/</a><code>Intercept.cs</code>.
 - Manually inserted into <code>WPF_XAML.csproj</code>:
-<pre>
-	&lt;Reference Include="InputIntercept"&gt;
-		&lt;HintPath&gt;..\InputIntercept\InputInterceptor\bin\Debug\netstandard2.0\InputIntercept.dll&lt;/HintPath&gt;
-	&lt;/Reference&gt;
-</pre>
+```
+	<Reference Include="InputIntercept">
+		<HintPath>..\InputIntercept\InputInterceptor\bin\Debug\netstandard2.0\InputIntercept.dll</HintPath>
+	</Reference>
+```
 
 - static class `InputInterceptor` does not get its `Initialize()` invoked automagically (no `New`);  
  	Must invoke `InputInterceptor.Initialize()` to link DLL before instancing `Intercept` class;  
@@ -71,7 +77,8 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 		- filter only selected mouse  
 		- implement `short[5]` cumulative displacement instead of increments  
 
-- Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):<br>
-	&lt;DisableWinExeOutputInference>true</DisableWinExeOutputInference&gt;<br>
-	&lt;OutputType&gt;Console Application&lt;/OutputType&gt; instead of &lt;OutputType&gt;WinExe&lt;/OutputType&gt;
-	
+- Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):
+```
+	<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
+	<OutputType>Console Application</OutputType> instead of <OutputType>WinExe</OutputType>   
+```
