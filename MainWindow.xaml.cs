@@ -99,7 +99,6 @@ namespace WPF_XAML
 			{
 				SHlabel.Content = $"mouse {Intercept.Stroke[0]} selected";
 				Intercept.Selected = Intercept.Stroke[0];
-				Intermouse.MyMouse();
 
                 select.Content = "Click to deselect";
 				capture.Visibility = Visibility.Visible;
@@ -108,7 +107,6 @@ namespace WPF_XAML
 			else
 			{
 				Intercept.Selected = 0;
-				Intermouse.AllMice();
 				capture.Visibility = Visibility.Hidden;
 				if (1 < Intercept.devices.Count) {
                 	SHlabel.Content = "Left-click 'Select' using mouse to be captured for SimHub";

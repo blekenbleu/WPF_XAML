@@ -46,16 +46,6 @@ namespace WPF_XAML
 			return true;
 		}
 
-		public void AllMice()
-		{
-			MouseHook Mousehook = new(MouseCallback);
-		}
-
-		public void MyMouse()
-		{
-			MouseHook Mousehook = new(SelectCallback);
-		}
-
 		public void End()
 		{
 		//	keyboardHook?.Dispose();
@@ -70,26 +60,22 @@ namespace WPF_XAML
 				if (null == devices)
 					devices = InputInterceptor.GetDeviceList(context, InputInterceptor.IsMouse);
 
-				Stroke[0] = (short)device;
-				string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
-				// Mouse XY coordinates are raw changes
-				Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
+				if (0 == Selected || device != Selected)
+				{
+					Stroke[0] = (short)device;
+					string scroll = (0 == (0xC00 & (ushort)m.State)) ? "" : $" x:{XY(ref m, 11)}, y:{XY(ref m, 10)}";
+					// Mouse XY coordinates are raw changes
+					Writestring($"Device: {device}; MouseStroke: X:{m.X}, Y:{m.Y}; S: {m.State}" + scroll);
+					return true;
+				}
 			}
 			catch (Exception exception)
 			{
 				Console.WriteLine($"MouseStroke: {exception}");
+				return true;
 			}
 
-			//  m.X = -m.X;	 // Invert mouse X
-			//  m.Y = -m.Y;	 // Invert mouse Y
-			return true;
-		}
-
-		private static bool SelectCallback(Context context, Device device, ref MouseStroke m)
-		{
-			if (Selected != device)
-				return true;
-
+			// device == Selected
 			try
 			{
 				// Mouse XY coordinates are raw changes

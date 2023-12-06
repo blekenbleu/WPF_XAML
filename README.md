@@ -74,8 +74,9 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 - to do:  
 		- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
 		- access `short[5] Stroke` from callback for mouse selection &nbsp; *done 4 Dec*  
-		- filter only selected mouse  
-		- implement `short[5]` cumulative displacement instead of increments  
+		- filter only selected mouse &emsp; &emsp; &emsp; *done 6 Dec* 
+		- implement `short[5]` cumulative displacements instead of increments  &nbsp; *done 6 Dec*  
+		- offer to recenter cumulative displacements
 
 - Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):
 ```
