@@ -79,6 +79,7 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 		- offer to recenter cumulative displacements  &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*  
 		- keep windows on top  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*
 - To do(?)  
+	- handle captured mouse buttons  
 	- unimplement passing context to callbacks
 		- not useful unless ref to update for device plug/unplug
 	- glue to vJoy and/or MIDI  
