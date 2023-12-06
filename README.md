@@ -71,14 +71,20 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 
 - Found [a solution for updating XAML TextBox Text from a static method](https://stackoverflow.com/questions/13121155/)
 
-- to do:  
+- implementation details:  
 		- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
-		- access `short[5] Stroke` from callback for mouse selection &nbsp; *done 4 Dec*  
-		- filter only selected mouse &emsp; &emsp; &emsp; *done 6 Dec* 
-		- implement `short[5]` cumulative displacements instead of increments  &nbsp; *done 6 Dec*  
-		- offer to recenter cumulative displacements
+		- set `short[0]` from callback `device` for mouse selection &nbsp; *done 4 Dec*  
+		- filter only selected mouse &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  *done 6 Dec*  
+		- `short[1-4]` cumulative displacements instead of increments &nbsp; *done 6 Dec*  
+		- offer to recenter cumulative displacements  &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*  
+		- keep windows on top  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*
+- To do(?)  
+	- unimplement passing context to callbacks
+		- not useful unless ref to update for device plug/unplug
+	- glue to vJoy and/or MIDI  
 
-- Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application):
+- Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application)
+	(e.g. for debugging):
 ```
 	<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
 	<OutputType>Console Application</OutputType> instead of <OutputType>WinExe</OutputType>   
