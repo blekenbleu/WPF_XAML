@@ -65,23 +65,23 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 	</Reference>
 ```
 
-- static class `InputInterceptor` does not get its `Initialize()` invoked automagically (no `New`);  
- 	Must invoke `InputInterceptor.Initialize()` to link DLL before instancing `Intercept` class;  
+- Before instancing `Intercept` class, invoke `InputInterceptor.Initialize();`  
+	to avoid crashing in static class `InputInterceptor`.   
     [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) now behaves the same...  
 
 - Found [a solution for updating XAML TextBox Text from a static method](https://stackoverflow.com/questions/13121155/)
 
 - implementation details:  
-		- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
-		- set `short[0]` from callback `device` for mouse selection &nbsp; *done 4 Dec*  
-		- filter only selected mouse &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  *done 6 Dec*  
-		- `short[1-4]` cumulative displacements instead of increments &nbsp; *done 6 Dec*  
-		- offer to recenter cumulative displacements  &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*  
-		- keep windows on top  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*
+	- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
+	- set `short[0]` from callback `device` for mouse selection &nbsp; *done 4 Dec*  
+	- filter only selected mouse &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;  *done 6 Dec*  
+	- `short[1-4]` cumulative displacements instead of increments &nbsp; *done 6 Dec*  
+	- offer to recenter cumulative displacements  &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*  
+	- keep windows on top  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 6 Dec*
+	- handle captured mouse buttons  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 7 Dec*
+	- remove context argument to callback &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 7 Dec*
+	- remove 500KB driver installation code  &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; *done 7 Dec*
 - To do(?)  
-	- handle captured mouse buttons  
-	- unimplement passing context to callbacks
-		- not useful unless ref to update for device plug/unplug
 	- glue to vJoy and/or MIDI  
 
 - Option to [add console output to WPF app](https://learn.microsoft.com/en-us/answers/questions/168547/project-output-type-forced-to-windows-application)

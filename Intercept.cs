@@ -38,15 +38,11 @@ namespace WPF_XAML
 			ButtonEvent = foo;
 
 
-			if (InputInterceptor.Initialized)
+			if (!InputInterceptor.Initialized)
 			{
 				if (!InputInterceptor.CheckDriverInstalled())
-					return InstallDriver();
-				else Writestring("Intercept Driver Initialized");
-			}
-			else
-			{
-				MessageBox.Show(Application.Current.MainWindow,
+					Writestring("Input interception driver not installed.");
+				else MessageBox.Show(Application.Current.MainWindow,
 								 "Input.Interceptor not initialized;  valid dll probably not found", "Intercept");
 				return false;
 			}
@@ -60,12 +56,12 @@ namespace WPF_XAML
 		}
 
 		// https://learn.microsoft.com/en-us/dotnet/framework/interop/how-to-implement-callback-functions
-		private static bool MouseCallback(Context context, Device device, ref MouseStroke ms)
+		private static bool MouseCallback(Device device, ref MouseStroke ms)
 		{
 			try
 			{
 				if (null == devices)
-					devices = InputInterceptor.GetDeviceList(context, InputInterceptor.IsMouse);
+					devices = InputInterceptor.GetDeviceList(InputInterceptor.IsMouse);
 
 				if (device != Selected)
 				{
@@ -136,7 +132,8 @@ namespace WPF_XAML
 			return (short)((((UInt16)ms.State >> s) & 1) * ((ms.Rolling < 0) ? -1 : 1));
 		}
 
-		private static bool KeyboardCallback(Context context, Device device, ref KeyStroke keyStroke)
+/*
+		private static bool KeyboardCallback(Device device, ref KeyStroke keyStroke)
 		{
 			try
 			{
@@ -146,29 +143,16 @@ namespace WPF_XAML
 			{
 				Console.WriteLine($"KeyStroke: {exception}");
 			}
-		/*	Button swap
+		//	Button swap
 			keyStroke.Code = keyStroke.Code switch {
 				KeyCode.A => KeyCode.B,
 				KeyCode.B => KeyCode.A,
 				_ => keyStroke.Code,
 			};
-		 */
+
 			return true;
 		}
-
-		static bool InstallDriver()
-		{
-			Writestring("Input interception driver not installed.");
-			if (InputInterceptor.CheckAdministratorRights())
-			{
-				Writestring("Installing...");
-				if (InputInterceptor.InstallDriver())
-					Writestring("Input interception driver installed! Restart your computer.");
-				else Writestring("Something... gone... wrong... :(");
-			}
-			else Writestring("Run InputInterceptori\\Resources\\install-interception.exe to install the required driver.");
-			return false;
-		}
+ */
 
 		public bool Devices(short stick)
 		{
