@@ -20,17 +20,23 @@ namespace WPF_XAML
 	//  KeyboardHook keyboardHook = new KeyboardHook(KeyboardCallback);
 		public delegate void WriteStatus(string s);
 		static WriteStatus Writestring = Console.WriteLine;
+		public delegate void ButtonDel(ushort index, bool down);
+		static ButtonDel ButtonEvent = Dummy;
 		public int Count => (null != devices) ? devices.Count : 0;
 		public static short[] Stroke = [0,0,0,0,0];
 		public static short Selected = 0;
+
+		static void Dummy(ushort index, bool down) { }
 
 		public Intercept()
 		{
 		}
 
-		public bool Initialize(Intercept.WriteStatus writeString)
+		public bool Initialize(Intercept.WriteStatus writeString, Intercept.ButtonDel foo)
 		{
 			Writestring = writeString;
+			ButtonEvent = foo;
+
 
 			if (InputInterceptor.Initialized)
 			{
@@ -68,7 +74,9 @@ namespace WPF_XAML
 						Stroke[0] = (short)device;
 						string scroll = (0 == (0xC00 & (ushort)ms.State)) ? "" : $" x:{XY(ref ms, 11)}, y:{XY(ref ms, 10)}";
 						// Mouse XY coordinates are raw changes
-						Writestring($"Device: {device}; MouseStroke: X:{ms.X}, Y:{ms.Y}; S: {ms.State}" + scroll);
+						Writestring($"Device: {device}; MouseStroke: X:{ms.X}, Y:{ms.Y}; S: {(ushort)ms.State}" + scroll);
+						if (0 != ms.State)
+							Buttons((ushort)ms.State);
 					}
 					return true;
 				}
@@ -92,6 +100,8 @@ namespace WPF_XAML
 				Stroke[2] += (short)ms.Y;
 
 				Writestring($"Selected Mouse {Selected}: X:{Stroke[1]}, Y:{Stroke[2]}; Scroll: x:{Stroke[3]}, y:{Stroke[4]}" );
+				if (0 != ms.State)
+					Buttons((ushort)ms.State);
 			}
 			catch (Exception exception)
 			{
@@ -99,6 +109,26 @@ namespace WPF_XAML
 			}
 
 			return false;	// do not pass Selected mouse strokes
+		}
+
+		// mouse State is a bitmap of button event pairs (down, up)
+		private static void Buttons(ushort state)
+		{
+			bool down = true, up = false;
+
+			for (ushort mask = 1, j = 0; j < 6; j++)
+			{
+				if (mask == (mask & state)) {
+					ButtonEvent(j, down);
+					mask <<= 1;
+				} else {
+					mask <<= 1;
+					if (mask == (mask & state))
+						ButtonEvent(j, up);
+				}
+					
+				mask <<= 1;
+			}
 		}
 
 		// decode scrolling
