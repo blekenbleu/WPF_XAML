@@ -13,7 +13,30 @@ namespace WPF_XAML
 	{ 
 		private string _statusText;
 
+		private string[] _button = ["Red", "White", "White", "White", "White", "White"];
+		public readonly string red = "Red", white = "White";
+
+		public string[] ButtonColor
+		{
+			get
+			{
+				return _button;
+			}
+
+			set
+			{
+				if (value == _button)
+                    return;
+
+				_button = value;
+
+				ButtonsChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor"));
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		public event PropertyChangedEventHandler ButtonsChanged;
 
 		public string StatusText
 		{
@@ -33,6 +56,7 @@ namespace WPF_XAML
 			}
 		}
 	}
+
 
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -63,7 +87,7 @@ namespace WPF_XAML
 
 				Intermouse = new Intercept();
 
-				if (!Intermouse.Initialize(WriteStatus))
+				if (!Intermouse.Initialize(WriteStatus, ColorButton))
 				{
 					MessageBox.Show(Application.Current.MainWindow, "No interception", "Intermouse.Initialize()");
 					state = 99;
@@ -82,6 +106,11 @@ namespace WPF_XAML
 		public static void WriteStatus(string text)
 		{
 			_mainViewModel.StatusText = text;		// _mainViewModel is static
+		}
+
+		public static void ColorButton (ushort index, bool down)
+		{
+        	_mainViewModel.ButtonColor[index] = down ? _mainViewModel.red : _mainViewModel.white;
 		}
 
 		private void Select_Click(object sender, RoutedEventArgs e)
@@ -129,6 +158,7 @@ namespace WPF_XAML
 			if (2 == state)
 			{
 				Intercept.Stroke[1] = Intercept.Stroke[2] = Intercept.Stroke[3] = Intercept.Stroke[4] = 0;
+				SHlabel.Content = _mainViewModel.ButtonColor[0]+_mainViewModel.ButtonColor[1]+_mainViewModel.ButtonColor[2]+_mainViewModel.ButtonColor[3]+_mainViewModel.ButtonColor[4]+_mainViewModel.ButtonColor[5];
 				return;
 			}
 			// capture.Visibility = Visibility.Hidden;
