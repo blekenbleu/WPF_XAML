@@ -10,33 +10,121 @@ namespace WPF_XAML
 	/// a view model class with string property StatusText
 	/// </summary>
 	public class MainViewModel : INotifyPropertyChanged
-	{ 
-		private string _statusText;
-
-		private string[] _button = ["Red", "White", "White", "White", "White", "White"];
+	{
+		// One event handler for all property changes
+		public event PropertyChangedEventHandler PropertyChanged;
 		public readonly string red = "Red", white = "White";
+		private string _statusText;
+		// PropertyChanged does not work for array elements
+		private string _button0, _button1, _button2, _button3, _button4, _button5;
 
-		public string[] ButtonColor
+		public string ButtonColor0
 		{
 			get
 			{
-				return _button;
+				return _button0;
 			}
 
 			set
 			{
-				if (value == _button)
-                    return;
+				if (value == _button0)
+					return;
 
-				_button = value;
+				_button0 = value;
 
-				ButtonsChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor"));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor0"));
 			}
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
+		public string ButtonColor1
+		{
+			get
+			{
+				return _button1;
+			}
 
-		public event PropertyChangedEventHandler ButtonsChanged;
+			set
+			{
+				if (value == _button1)
+					return;
+
+				_button1 = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor1"));
+			}
+		}
+
+		public string ButtonColor2
+		{
+			get
+			{
+				return _button2;
+			}
+
+			set
+			{
+				if (value == _button2)
+					return;
+
+				_button2 = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor2"));
+			}
+		}
+
+		public string ButtonColor3
+		{
+			get
+			{
+				return _button3;
+			}
+
+			set
+			{
+				if (value == _button3)
+					return;
+
+				_button3 = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor3"));
+			}
+		}
+
+		public string ButtonColor4
+		{
+			get
+			{
+				return _button4;
+			}
+
+			set
+			{
+				if (value == _button4)
+					return;
+
+				_button4 = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor4"));
+			}
+		}
+
+		public string ButtonColor5
+		{
+			get
+			{
+				return _button5;
+			}
+
+			set
+			{
+				if (value == _button5)
+					return;
+
+				_button5 = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ButtonColor5"));
+			}
+		}
 
 		public string StatusText
 		{
@@ -110,7 +198,27 @@ namespace WPF_XAML
 
 		public static void ColorButton (ushort index, bool down)
 		{
-        	_mainViewModel.ButtonColor[index] = down ? _mainViewModel.red : _mainViewModel.white;
+			switch (index) {
+				case 0:
+					_mainViewModel.ButtonColor0 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				case 1:
+					_mainViewModel.ButtonColor1 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				case 2:
+					_mainViewModel.ButtonColor2 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				case 3:
+					_mainViewModel.ButtonColor3 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				case 4:
+					_mainViewModel.ButtonColor4 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				case 5:
+				default:
+					_mainViewModel.ButtonColor5 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+			}
 		}
 
 		private void Select_Click(object sender, RoutedEventArgs e)
@@ -129,7 +237,7 @@ namespace WPF_XAML
 				SHlabel.Content = $"state {state}:  mouse {Intercept.Stroke[0]} selected";
 				Intercept.Selected = Intercept.Stroke[0];
 
-                select.Content = "Click to deselect";
+				select.Content = "Click to deselect";
 				capture.Visibility = Visibility.Visible;
 				state = 1;
 			}
@@ -138,7 +246,7 @@ namespace WPF_XAML
 				Intercept.Selected = 0;
 				capture.Visibility = Visibility.Hidden;
 				if (1 < Intercept.devices.Count) {
-                	SHlabel.Content = $"state {state}:  Left-click 'Select' using mouse to be captured for SimHub";
+					SHlabel.Content = $"state {state}:  Left-click 'Select' using mouse to be captured for SimHub";
 					select.Content = "Select current device";
 					capture.Content = "Capture selected device for SimHub use";
 					state = 0;
@@ -158,7 +266,8 @@ namespace WPF_XAML
 			if (2 == state)
 			{
 				Intercept.Stroke[1] = Intercept.Stroke[2] = Intercept.Stroke[3] = Intercept.Stroke[4] = 0;
-				SHlabel.Content = _mainViewModel.ButtonColor[0]+_mainViewModel.ButtonColor[1]+_mainViewModel.ButtonColor[2]+_mainViewModel.ButtonColor[3]+_mainViewModel.ButtonColor[4]+_mainViewModel.ButtonColor[5];
+//				SHlabel.Content = _mainViewModel.ButtonColor0+_mainViewModel.ButtonColor1+_mainViewModel.ButtonColor2
+//					+_mainViewModel.ButtonColor3+_mainViewModel.ButtonColor4+_mainViewModel.ButtonColor5;
 				return;
 			}
 			// capture.Visibility = Visibility.Hidden;
