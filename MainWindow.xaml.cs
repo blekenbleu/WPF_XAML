@@ -152,6 +152,7 @@ namespace WPF_XAML
 	public partial class MainWindow : Window
 	{
 		static ushort state = 0;
+		static short Selected = 0;
 		Intercept Intermouse;
 
 		// need to reference XAML control from a static method
@@ -235,7 +236,7 @@ namespace WPF_XAML
 			else if (0 == state)
 			{
 				SHlabel.Content = $"state {state}:  mouse {Intercept.Stroke[0]} selected";
-				Intercept.Selected = Intercept.Stroke[0];
+				Selected = Intercept.Stroke[0];
 
 				select.Content = "Click to deselect";
 				capture.Visibility = Visibility.Visible;
@@ -243,7 +244,7 @@ namespace WPF_XAML
 			}
 			else	// deselect if state 1 or 2
 			{
-				Intercept.Selected = 0;
+				Intercept.Captured = 0;
 				capture.Visibility = Visibility.Hidden;
 				if (1 < Intercept.devices.Count) {
 					SHlabel.Content = $"state {state}:  Left-click 'Select' using mouse to be captured for SimHub";
@@ -256,7 +257,7 @@ namespace WPF_XAML
 
 		bool Hooked()		// what to do when a mouse is hooked; e.g. change callback
 		{
-			Intermouse?.Devices(Intercept.Selected);	// if 0, iterate thru all predicate devices
+			Intermouse?.Devices(Intercept.Captured);	// if 0, iterate thru all predicate devices
 			this.Close();
 			return true;
 		}
@@ -270,6 +271,8 @@ namespace WPF_XAML
 //					+_mainViewModel.ButtonColor3+_mainViewModel.ButtonColor4+_mainViewModel.ButtonColor5;
 				return;
 			}
+			else Intercept.Captured = Selected;
+
 			// capture.Visibility = Visibility.Hidden;
 			capture.Content = "click to center captured coordinates";
 			Hooked();
@@ -281,7 +284,7 @@ namespace WPF_XAML
 			{
 				// Handle interception unhooking
 				var result = MessageBox.Show(Application.Current.MainWindow, //"state: " + state + ";  " +
-											 ((0 < state) ? $"Unhook mouse {Intercept.Selected} and exit?" : "Done?"),
+											 ((0 < state) ? $"Unhook mouse {Intercept.Captured} and exit?" : "Done?"),
 											 "Closing",			   // messageBox caption
 											 MessageBoxButton.YesNo);
 

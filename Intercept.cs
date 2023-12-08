@@ -24,7 +24,7 @@ namespace WPF_XAML
 		static ButtonDel ButtonEvent = Dummy;
 		public int Count => (null != devices) ? devices.Count : 0;
 		public static short[] Stroke = [0,0,0,0,0];
-		public static short Selected = 0;
+		public static short Captured = 0;
 
 		static void Dummy(ushort index, bool down) { }
 
@@ -63,9 +63,9 @@ namespace WPF_XAML
 				if (null == devices)
 					devices = InputInterceptor.GetDeviceList(InputInterceptor.IsMouse);
 
-				if (device != Selected)
+				if (device != Captured)
 				{
-					if (0 == Selected)
+					if (0 == Captured)
 					{
 						Stroke[0] = (short)device;
 						string scroll = (0 == (0xC00 & (ushort)ms.State)) ? "" : $" x:{XY(ref ms, 11)}, y:{XY(ref ms, 10)}";
@@ -83,7 +83,7 @@ namespace WPF_XAML
 				return true;
 			}
 
-			// device == Selected
+			// device == Captured
 			try
 			{
 				// Mouse XY coordinates are raw changes
@@ -95,7 +95,7 @@ namespace WPF_XAML
 				Stroke[1] += (short)ms.X;
 				Stroke[2] += (short)ms.Y;
 
-				Writestring($"Selected Mouse {Selected}: X:{Stroke[1]}, Y:{Stroke[2]}; Scroll: x:{Stroke[3]}, y:{Stroke[4]}" );
+				Writestring($"Captured Mouse {Captured}: X:{Stroke[1]}, Y:{Stroke[2]}; Scroll: x:{Stroke[3]}, y:{Stroke[4]}" );
 				if (0 != ms.State)
 					Buttons((ushort)ms.State);
 			}
@@ -104,7 +104,7 @@ namespace WPF_XAML
 				Console.WriteLine($"MouseStroke: {exception}");
 			}
 
-			return false;	// do not pass Selected mouse strokes
+			return false;	// do not pass Captured mouse strokes
 		}
 
 		// mouse State is a bitmap of button event pairs (down, up)
