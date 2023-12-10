@@ -51,7 +51,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
 	<Reference Include="InputIntercept">
-      <HintPath>..\InputIntercept\InputInterceptor\bin\Debug\netstandard2.0\InputIntercept.dll</HintPath>
+      <HintPath>..\InputIntercept\bin\Release\netstandard2.0\InputIntercept.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
