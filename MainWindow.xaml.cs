@@ -216,8 +216,9 @@ namespace WPF_XAML
 					_mainViewModel.ButtonColor4 = down ? _mainViewModel.red : _mainViewModel.white;
 					break;
 				case 5:
-				default:
 					_mainViewModel.ButtonColor5 = down ? _mainViewModel.red : _mainViewModel.white;
+					break;
+				default:
 					break;
 			}
 		}
