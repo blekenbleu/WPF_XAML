@@ -35,7 +35,7 @@ This is the **intercept** branch for integrating mouse interception.
 Keyboard / mouse stroke interception depends on a [**custom signed driver**](https://github.com/oblitum/Interception/releases/latest).
 - With *good* luck, [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) automatically installs it.
 - Otherwise, reboot the PC and run a Windows Command prompt *as administrator*:
-    **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /install`
+    **InputIntercept\Resources>**`install-interception.exe /install`
 ```
     Interception command line installation tool
     Copyright (C) 2008-2018 Francisco Lopes da Silva
@@ -46,7 +46,7 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 
 #### to uninstall the driver
 - I needed to do this for error handling code testing...  
-    **InputIntercept\InputInterceptor\Resources>**`install-interception.exe /uninstall`
+    **InputIntercept\Resources>**`install-interception.exe /uninstall`
     - then reboot
 
 </details>
@@ -61,7 +61,7 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 - Manually inserted into <code>WPF_XAML.csproj</code>:
 ```
 	<Reference Include="InputIntercept">
-		<HintPath>..\InputIntercept\InputInterceptor\bin\Debug\netstandard2.0\InputIntercept.dll</HintPath>
+		<HintPath>..\InputIntercept\bin\Debug\netstandard2.0\InputIntercept.dll</HintPath>
 	</Reference>
 ```
 
@@ -69,7 +69,7 @@ Keyboard / mouse stroke interception depends on a [**custom signed driver**](htt
 	to avoid crashing in static class `InputInterceptor`.   
     [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) now behaves the same...  
 
-- Found [a solution for updating XAML TextBox Text from a static method](https://stackoverflow.com/questions/13121155/)
+- Found [a solution for updating XAML controls from a static method](https://stackoverflow.com/questions/13121155/)
 
 - implementation details:  
 	- detect and exit if no more than one mouse &emsp; &emsp; &emsp; &emsp; &emsp; *done 4 Dec*    
