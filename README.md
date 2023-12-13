@@ -1,5 +1,6 @@
 # WPF_XAML
  Learning exercise for [SimHub mouse interception plugin UI](https://blekenbleu.github.io/static/SimHub/VisualStudio.htm#XAML)  
+requires:&nbsp; `stripped` branch of [blekenbleu/InputIntercept](https://github.com/blekenbleu/InputIntercept)  
 
 This is the **intercept** branch for integrating mouse interception.
 
@@ -33,9 +34,8 @@ This is the **intercept** branch for integrating mouse interception.
 <details><summary><a href=https://github.com/oblitum/Interception/releases/latest><b>Interception driver</b> installation</summary>
 
 Keyboard / mouse stroke interception depends on a [**custom signed driver**](https://github.com/oblitum/Interception/releases/latest).
-- With *good* luck, [InterceptMouse](https://github.com/blekenbleu/InterceptMouse) automatically installs it.
-- Otherwise, reboot the PC and run a Windows Command prompt *as administrator*:
-    **InputIntercept\Resources>**`install-interception.exe /install`
+- reboot Windows and run a Command prompt *as administrator*:  
+    `install-interception.exe /install`
 ```
     Interception command line installation tool
     Copyright (C) 2008-2018 Francisco Lopes da Silva
